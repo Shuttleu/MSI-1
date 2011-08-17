@@ -115,27 +115,34 @@ begin
       SetLength(toWithdraw[i], length(tools));
       t := 0;
 
-      for j := 0 to High(tools) do
-        found := MSI_FindTool(tools[j], TAB_INV, x, y);
-      if (not found) then
+      if tools[0] = FISH_HARPOON then
       begin
-        Dec(j)
-        if (MSI_Items[tools[j]].EquipLevel > 0) then
-          found := MSI_FindTool(tools[j], TAB_EQUIP, x, y);
-      end;
-
-      if (not found) then
-      begin
-        toWithdraw[i][t] := tools[j-1]; // Adds to the array if the tool isn't found
-        inc(t);
-      end;
-
-      {for j := 0 to High(tools) do
-        if (not MSI_FindTool(tools[j], TAB_INV, x, y)) then
+        for j := 0 to High(tools) do
         begin
-          toWithdraw[i][t] := tools[j]; // Adds to the array if the tool isn't found
+          found := MSI_FindTool(tools[j], TAB_INV, x, y);
+          if found then Break;
+        end;
+        if (not found) then
+        begin
+          Dec(j)
+          if (MSI_Items[tools[j]].EquipLevel > 0) then
+            found := MSI_FindTool(tools[j], TAB_EQUIP, x, y);
+        end;
+
+        if (not found) then
+        begin
+          toWithdraw[i][t] := tools[j-1]; // Adds to the array if the tool isn't found
           inc(t);
-        end;                        }
+        end;
+      end else
+      begin
+        for j := 0 to High(tools) do
+          if (not MSI_FindTool(tools[j], TAB_INV, x, y)) then
+          begin
+            toWithdraw[i][t] := tools[j]; // Adds to the array if the tool isn't found
+            inc(t);
+          end;
+      end;
 
       setLength(toWithdraw[i], t);
     end;
